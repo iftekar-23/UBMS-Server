@@ -40,10 +40,31 @@ async function run() {
         });
 
         // / Post all bills
-       
+        app.post('/bills', async (req, res) => {
+            const bill = req.body;
+            const result = await billsCollection.insertOne(bill);
+            res.send(result);
+        });
+
+        const { ObjectId } = require('mongodb');
+
+        app.get("/bills/:id", async (req, res) => {
+            const { id } = req.params;
+
+            try {
+                const bill = await billsCollection.findOne({ _id: new ObjectId(id) });
+                if (!bill) return res.status(404).send({ message: "Not found" });
+                res.json(bill);
+            } catch (err) {
+                console.error(err);
+                res.status(500).send({ message: "Invalid ID" });
+            }
+        });
 
 
 
+        // POST /payments
+     
 
 
 
