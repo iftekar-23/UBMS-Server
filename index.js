@@ -13,7 +13,7 @@ app.use(express.json());
 
 const uri = `mongodb+srv://${process.env.USER_NAME}:${process.env.USER_PASS}@cluster0.1yqh28p.mongodb.net/?appName=Cluster0`;
 
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+
 const client = new MongoClient(uri, {
     serverApi: {
         version: ServerApiVersion.v1,
@@ -46,6 +46,24 @@ async function run() {
             res.send(result);
         });
 
+
+        
+        app.get("/recent-bills", async (req, res) => {
+            try {
+                const bills = await billsCollection
+                    .find({})
+                    .sort({ date: -1 }) 
+                    .limit(6)
+                    .toArray();
+                res.json(bills);
+            } catch (err) {
+                console.error(err);
+                res.status(500).send({ message: "Failed to fetch recent bills" });
+            }
+        });
+
+
+
         const { ObjectId } = require('mongodb');
 
         app.get("/bills/:id", async (req, res) => {
@@ -61,7 +79,7 @@ async function run() {
             }
         });
 
-        // DELETE /payments/:id
+        // DELETE 
         app.delete('/payments/:id', async (req, res) => {
             const { id } = req.params;
             try {
@@ -73,12 +91,12 @@ async function run() {
             }
         });
 
-        // PUT /payments/:id
+        // PUT 
         app.put('/payments/:id', async (req, res) => {
             const { id } = req.params;
             const updateData = {
                 ...req.body,
-                amount: parseFloat(req.body.amount) // ensure number
+                amount: parseFloat(req.body.amount)
             };
             try {
                 const result = await paymentsCollection.updateOne(
@@ -124,12 +142,10 @@ async function run() {
 
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
-        // Ensures that the client will close when you finish/error
-        // await client.close();
+
     }
 }
 run().catch(console.dir);
-
 
 // Routes
 app.get('/', (req, res) => {
