@@ -73,7 +73,24 @@ async function run() {
             }
         });
 
-       
+        // PUT /payments/:id
+        app.put('/payments/:id', async (req, res) => {
+            const { id } = req.params;
+            const updateData = {
+                ...req.body,
+                amount: parseFloat(req.body.amount) // ensure number
+            };
+            try {
+                const result = await paymentsCollection.updateOne(
+                    { _id: new ObjectId(id) },
+                    { $set: updateData }
+                );
+                res.json({ message: "Payment updated successfully", result });
+            } catch (err) {
+                console.error(err);
+                res.status(500).send({ message: "Failed to update payment" });
+            }
+        });
 
 
 
