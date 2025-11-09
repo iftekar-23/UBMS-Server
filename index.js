@@ -27,7 +27,24 @@ async function run() {
         await client.connect();
         await client.db("admin").command({ ping: 1 });
 
-        
+        const db = client.db('ubms_db');
+        const billsCollection = db.collection('bills');
+        const paymentsCollection = db.collection('payments');
+
+
+
+        // / GET all bills
+        app.get('/bills', async (req, res) => {
+            const bills = await billsCollection.find({}).toArray();
+            res.send(bills);
+        });
+
+        // / Post all bills
+       
+
+
+
+
 
 
 
