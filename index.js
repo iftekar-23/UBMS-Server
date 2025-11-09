@@ -79,7 +79,15 @@ async function run() {
 
 
         // GET /payments
-       
+        app.get('/payments', async (req, res) => {
+            try {
+                const payments = await paymentsCollection.find({}).toArray();
+                res.json(payments);
+            } catch (err) {
+                console.error(err);
+                res.status(500).send({ message: "Failed to fetch payments" });
+            }
+        });
 
 
 
