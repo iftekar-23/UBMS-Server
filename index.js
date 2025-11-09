@@ -64,7 +64,25 @@ async function run() {
 
 
         // POST /payments
-     
+        app.post('/payments', async (req, res) => {
+            const payment = req.body;
+
+
+            try {
+                const result = await paymentsCollection.insertOne(payment);
+                res.status(201).send({ message: "Payment saved successfully", data: result });
+            } catch (err) {
+                console.error(err);
+                res.status(500).send({ message: "Failed to save payment" });
+            }
+        });
+
+
+        // GET /payments
+       
+
+
+
 
 
 
