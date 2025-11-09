@@ -61,6 +61,20 @@ async function run() {
             }
         });
 
+        // DELETE /payments/:id
+        app.delete('/payments/:id', async (req, res) => {
+            const { id } = req.params;
+            try {
+                const result = await paymentsCollection.deleteOne({ _id: new ObjectId(id) });
+                res.json({ message: "Payment deleted successfully", result });
+            } catch (err) {
+                console.error(err);
+                res.status(500).send({ message: "Failed to delete payment" });
+            }
+        });
+
+       
+
 
 
         // POST /payments
@@ -88,12 +102,6 @@ async function run() {
                 res.status(500).send({ message: "Failed to fetch payments" });
             }
         });
-
-
-
-
-
-
 
 
 
