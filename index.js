@@ -24,8 +24,8 @@ const client = new MongoClient(uri, {
 
 async function run() {
     try {
-        await client.connect();
-        await client.db("admin").command({ ping: 1 });
+        // await client.connect();
+        // await client.db("admin").command({ ping: 1 });
 
         const db = client.db('ubms_db');
         const billsCollection = db.collection('bills');
@@ -47,12 +47,12 @@ async function run() {
         });
 
 
-        
+
         app.get("/recent-bills", async (req, res) => {
             try {
                 const bills = await billsCollection
                     .find({})
-                    .sort({ date: -1 }) 
+                    .sort({ date: -1 })
                     .limit(6)
                     .toArray();
                 res.json(bills);
@@ -129,14 +129,22 @@ async function run() {
 
         // GET /payments
         app.get('/payments', async (req, res) => {
+            const { email } = req.query;
+
             try {
-                const payments = await paymentsCollection.find({}).toArray();
+                let query = {};
+                if (email) {
+                    query = { email }; 
+                }
+
+                const payments = await paymentsCollection.find(query).toArray();
                 res.json(payments);
             } catch (err) {
                 console.error(err);
                 res.status(500).send({ message: "Failed to fetch payments" });
             }
         });
+
 
 
 
